@@ -1,0 +1,11 @@
+Setup for Laravel + Inertia + React + Typescript
+
+1 - Laravel new demo
+
+2 - Setup db + migrations etc
+
+3 - composer require laravel/breeze --dev
+
+4 - php artisan breeze:install
+
+5 - php artisan serve && npm run dev
