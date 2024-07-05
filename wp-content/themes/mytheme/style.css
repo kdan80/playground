@@ -1,4 +1,23 @@
-/** 
-Theme name: mytheme
+/* 
+Theme Name: mytheme
+Theme URI: xxx.com
 Author: kd 
-**/
+Author URI: kierandansey.co.uk
+Description: My theme
+Version: 1.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: custom, theme, development
+Text Domain: my-custom-theme
+*/
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+ul,
+ol {
+    list-style: none;
+}
