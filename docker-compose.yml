@@ -1,6 +1,7 @@
 services:
 
   database:
+    container_name: wp_db
     image: mariadb:10.6.4-focal
     restart: unless-stopped
     ports:
@@ -21,6 +22,7 @@ services:
           memory: 2048m
 
   phpmyadmin:
+    container_name: wp_php
     depends_on:
       - database
     image: phpmyadmin/phpmyadmin
@@ -35,9 +37,11 @@ services:
       - wordpress-network
 
   wordpress:
+    container_name: wordpress
     depends_on:
       - database
-    image: wordpress:6.2.2-apache
+    user: root
+    image: wordpress:latest
     restart: unless-stopped
     ports:
       - 8880:80
@@ -47,8 +51,11 @@ services:
       WORDPRESS_DB_NAME: '${MYSQL_DATABASE}'
       WORDPRESS_DB_USER: '${MYSQL_USER}'
       WORDPRESS_DB_PASSWORD: '${MYSQL_PASSWORD}'
+    entrypoint: /usr/local/bin/entrypoint.sh
     volumes:
-      - ./wp-content:/var/www/html/wp-content
+      - ./src:/var/www/html
+      - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
+      - ./config/php.conf.ini:/usr/local/etc/php/conf.d/uploads.ini
     networks:
       - wordpress-network
 
