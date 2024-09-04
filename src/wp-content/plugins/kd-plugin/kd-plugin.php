@@ -6,6 +6,8 @@
     Version: 0.01
     Author: KD
     Author URI: www.kierandansey.co.uk
+    Text Domain: wcpdomain
+    Domain Path: /languages
 */
 
 class WordCountAndTimePlugin {
@@ -13,6 +15,49 @@ class WordCountAndTimePlugin {
     function __construct() {
         add_action('admin_menu', array($this, 'adminPage'));
         add_action('admin_init', array($this, 'settings'));
+        add_filter('the_content', array($this, 'ifWrap'));
+        add_action('init', array($this, 'languages'));
+    }
+
+    function languages() {
+        load_plugin_textdomain('wcpdomain', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    }
+
+    function ifWrap($content) {
+        if ((is_main_query() && is_single()) && (get_option('wcp_wordcount', '1') || get_option('wcp_charactercount', '1') || get_option('wcp_readtime', '1'))) {
+            return $this->createHTML($content);
+        }
+
+        return $content;
+    }
+
+    function createHTML($content) {
+        $html = '<h3>' . esc_html(get_option('wcp_headline', 'Post Statistics')) . '</h3><p>';
+
+        // get word count once
+        if (get_option('wcp_wordcount', '1') OR get_option('wcp_readtime', '1')) {
+            $wordCount = str_word_count(strip_tags($content));
+        }
+
+        if (get_option('wcp_wordcount', '1')) {
+            $html .= esc_html__('This post has', 'wcpdomain') . ' ' . $wordCount . ' ' . esc_html__('words', 'wcpdomain') . '<br>';
+        }
+
+        if (get_option('wcp_charactercount', '1')) {
+            $html .= 'This post has ' . strlen(strip_tags($content)) . ' characters.<br>';
+        }
+
+        if (get_option('wcp_readtime', '1')) {
+            $html .= 'This post will take about ' . round($wordCount/225) . ' minute(s) to read.<br>';
+        }
+
+        $html .= '</p>';
+
+        if (get_option('wcp_location', '0') == '0') {
+            return $html . $content;
+        }
+
+        return $content . $html;
     }
 
     function settings() {
@@ -72,7 +117,7 @@ class WordCountAndTimePlugin {
     function adminPage() {
         add_options_page(
             'Word Count Settings',
-            'Word Count',
+            __('Word Count', 'wcpdomain'),
             'manage_options',
             'word-count-settings-page',
             array($this, 'adminPageHTML')
