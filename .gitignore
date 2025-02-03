@@ -39,9 +39,13 @@ yarn-error.log
 /src/wp-activate.php     
 /src/wp-config-sample.php  
 /src/wp-login.php
-/src/wp-admin            
-/src/wp-content            
+/src/wp-admin        
 /src/wp-mail.php
 /src/wp-blog-header.php  
 /src/wp-cron.php           
 /src/wp-settings.php
+
+/src/wp-content/*
+!/src/wp-content/themes/
+/src/wp-content/themes/*
+!/src/wp-content/themes/kd_theme/
